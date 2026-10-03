@@ -1,0 +1,110 @@
+{
+ "disclaimer": "Demo data written by the project author for illustration. Not real-world evidence.",
+ "scenarios": [
+  {
+   "id": "budget-handoff",
+   "title": "Same message, three recipients",
+   "message": "Please send it to everyone by EOD tomorrow, as discussed. The SLA needs sign-off before the meeting.",
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "meta": {
+     "sender_tz": "UTC+5:30"
+    },
+    "referents": {
+     "it": "the Q3 budget report"
+    },
+    "glossary": {
+     "SLA": "service-level agreement"
+    },
+    "context_notes": {
+     "everyone": "everyone on the backend team (Asha, Ravi and Karan)",
+     "as discussed": "as discussed on Mon 28 Sep (revised payment terms)",
+     "the meeting": "the Friday budget review meeting"
+    }
+   },
+   "recipients": [
+    {
+     "id": "Asha (teammate, same project)",
+     "meta": {
+      "recipient_tz": "UTC+5:30"
+     },
+     "history": [
+      "S: Draft of the Q3 budget report is ready for review.",
+      "R: Great, I'll read the Q3 budget report tonight. SLA section still pending?",
+      "S: Yes, the SLA wording is with legal. EOD tomorrow works for the sign-off?",
+      "R: EOD tomorrow works. Should we share the Q3 budget report with the whole backend team?",
+      "S: Yes, everyone: Asha, Ravi and Karan. As discussed on Monday, the budget review meeting is Friday.",
+      "R: Perfect, will do. See you at the budget review meeting."
+     ]
+    },
+    {
+     "id": "Vikram (new client contact, Toronto)",
+     "meta": {
+      "recipient_tz": "UTC-5"
+     },
+     "history": [
+      "S: Hello Vikram, welcome aboard.",
+      "R: Thanks! Looking forward to working with you. Which time zone are you in?",
+      "S: India, UTC+5:30. Let's talk Friday.",
+      "R: Understood, I'm in Toronto. Which Friday, and what time exactly?"
+     ]
+    },
+    {
+     "id": "Meera (finance, same time zone)",
+     "meta": {
+      "recipient_tz": "UTC+5:30"
+     },
+     "history": [
+      "S: Hi Meera, the Q3 budget report is ready.",
+      "R: Thanks! I'll go through the Q3 budget report tomorrow.",
+      "S: Please share feedback by EOD tomorrow if possible.",
+      "R: Sure, EOD tomorrow is fine.",
+      "S: Also, we agreed on Monday to review it with the whole backend team on Friday, the budget review meeting.",
+      "R: Okay, noted."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hotfix-request",
+   "title": "Technical vs non-technical recipient",
+   "message": "Please push the hotfix and rerun them soon.",
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "meta": {
+     "sender_tz": "UTC+5:30"
+    },
+    "referents": {
+     "them": "the failing regression tests"
+    },
+    "glossary": {
+     "hotfix": "a small urgent patch released outside the normal schedule"
+    },
+    "context_notes": {}
+   },
+   "recipients": [
+    {
+     "id": "Dev (engineer)",
+     "meta": {
+      "recipient_tz": "UTC+5:30"
+     },
+     "history": [
+      "S: The regression tests are failing on staging.",
+      "R: I saw the failing regression tests. I'll prepare a hotfix.",
+      "S: Thanks."
+     ]
+    },
+    {
+     "id": "Priya (operations manager)",
+     "meta": {
+      "recipient_tz": "UTC+5:30"
+     },
+     "history": [
+      "S: Hi Priya, are the vendor invoices filed?",
+      "R: Yes, all filed. Anything else?"
+     ]
+    }
+   ]
+  }
+ ]
+}

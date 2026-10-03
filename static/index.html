@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOT-GOAT: recipient-aware message adaptation</title>
+<style>
+:root{--bg:#f6f7f9;--surface:#fff;--ink:#14213d;--muted:#5b6679;--line:#d9dee7;--accent:#14213d;
+--coreference:#c2410c;--temporal:#1d4ed8;--scope:#7c3aed;--terminology:#047857;--implicit:#be185d;
+--ok:#166534;--okbg:#e7f4ea;--warn:#92400e;--warnbg:#fdf0dc;--bad:#991b1b;--badbg:#fbe4e4;
+--serif:Georgia,"Iowan Old Style","Times New Roman",serif;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#10151f;--surface:#171e2b;--ink:#e6eaf2;--muted:#9aa5b8;--line:#2b3547;--accent:#e6eaf2;
+--coreference:#fb923c;--temporal:#7aa2ff;--scope:#b69cff;--terminology:#34d399;--implicit:#f472b6;--okbg:#12301c;--warnbg:#3a2a10;--badbg:#3b1616;--ok:#86efac;--warn:#fcd34d;--bad:#fca5a5}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans)}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 24px;padding:18px 24px 0;max-width:1500px;margin:0 auto}
+h1{font:600 22px var(--sans);margin:0;letter-spacing:-.01em}
+header p{margin:0;color:var(--muted);flex:1 1 320px}
+nav{display:flex;gap:4px;max-width:1500px;margin:12px auto 0;padding:0 24px;border-bottom:1px solid var(--line)}
+nav button{border:0;background:none;padding:8px 14px;font:inherit;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--temporal);outline-offset:2px}
+main{max-width:1500px;margin:0 auto;padding:20px 24px 60px}
+.layout{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:24px;align-items:start}
+@media(max-width:960px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.panel+.panel{margin-top:14px}
+label,.lbl{display:block;font-weight:600;font-size:13px;margin:0 0 4px}
+textarea,input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:7px 9px}
+textarea{resize:vertical;min-height:64px}
+textarea.mono{font:12px/1.45 ui-monospace,Menlo,Consolas,monospace}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.btn{background:var(--accent);color:var(--bg);border:0;border-radius:4px;padding:9px 16px;font:600 14px var(--sans);cursor:pointer}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line);font-weight:500;padding:6px 10px}
+.btn:disabled{opacity:.5;cursor:wait}
+.rec{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.hint{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;align-items:start}
+.res h3{margin:0;font:600 16px var(--sans)}
+.res .head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:8px}
+.badge{font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.b-pass{background:var(--okbg);color:var(--ok)}.b-adapted{background:var(--warnbg);color:var(--warn)}.b-bad{background:var(--badbg);color:var(--bad)}
+.meter{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:2px 0 12px}.meter i{display:block;height:100%;background:var(--accent)}
+.msg{font:17px/1.65 var(--serif);margin:4px 0 12px;padding:10px 12px;background:var(--bg);border-radius:4px;border-left:3px solid var(--line)}
+.msg.new{border-left-color:var(--terminology)}
+.sp{text-decoration:underline wavy;text-decoration-thickness:1.5px;text-underline-offset:4px;cursor:help}
+.sp.sel{font-weight:700}.sp.dim{opacity:.55}
+.t-coreference{text-decoration-color:var(--coreference)}.t-temporal{text-decoration-color:var(--temporal)}.t-scope{text-decoration-color:var(--scope)}
+.t-terminology{text-decoration-color:var(--terminology)}.t-implicit{text-decoration-color:var(--implicit)}
+ins{background:color-mix(in srgb,var(--terminology) 20%,transparent);text-decoration:none;border-radius:2px;padding:0 1px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.d-coreference{background:var(--coreference)}.d-temporal{background:var(--temporal)}.d-scope{background:var(--scope)}.d-terminology{background:var(--terminology)}.d-implicit{background:var(--implicit)}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted)}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.why{color:var(--muted);font-size:12px}
+details{margin-top:10px}summary{cursor:pointer;font-weight:600;font-size:13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chip{font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+.chip.ok{background:var(--okbg);color:var(--ok);border-color:transparent}.chip.no{background:var(--badbg);color:var(--bad);border-color:transparent}
+.ask{background:var(--warnbg);color:var(--warn);padding:8px 10px;border-radius:4px;font-size:13px;margin-top:8px}
+.note{background:var(--warnbg);color:var(--warn);padding:9px 12px;border-radius:4px;font-size:13px;margin-bottom:14px}
+.cm td,.cm th{text-align:center;padding:8px 12px;border:1px solid var(--line)}.cm td.k{font-weight:700;font-size:18px}
+.err{color:var(--bad);padding:10px 0}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.kpi{border:1px solid var(--line);border-radius:4px;padding:6px 12px}.kpi b{font-size:20px;display:block}
+footer{max-width:1500px;margin:0 auto;padding:0 24px 30px;color:var(--muted);font-size:13px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>AOT-GOAT</h1>
+  <p>Same message, different recipient histories: score the risk of being misread, decide whether to intervene, and make the smallest edit that fixes it.</p>
+</header>
+<nav role="tablist">
+  <button role="tab" id="tab-demo" aria-selected="true">Compare recipients</button>
+  <button role="tab" id="tab-eval" aria-selected="false">Evaluation</button>
+</nav>
+<main>
+<section id="demo">
+  <div class="layout">
+    <div>
+      <div class="panel">
+        <label for="scenario">Demo scenario</label>
+        <select id="scenario"></select>
+        <p class="hint" id="provider"></p>
+      </div>
+      <div class="panel">
+        <label for="message">Message to send</label>
+        <textarea id="message" rows="3"></textarea>
+        <details><summary>Sender context (JSON)</summary>
+          <p class="hint">Facts the sender supplies: pronoun referents, glossary, context notes, reference date. Edits may only use these, the history, and the message itself.</p>
+          <textarea id="ctx" class="mono" rows="9" spellcheck="false"></textarea></details>
+      </div>
+      <div class="panel">
+        <div class="lbl">Recipients</div>
+        <p class="hint">One line per message, starting with <code>S:</code> (sender) or <code>R:</code> (recipient).</p>
+        <div id="recs"></div>
+        <div class="row" style="margin-top:12px"><button class="btn ghost" id="addrec">Add recipient</button><button class="btn" id="run">Analyze message</button></div>
+        <label style="margin-top:10px;font-weight:400"><input type="checkbox" id="usellm" style="width:auto"> Use configured LLM as well</label>
+      </div>
+    </div>
+    <div id="out"><p class="hint">Pick a scenario and run the analysis. Results for each recipient appear here.</p></div>
+  </div>
+</section>
+<section id="evalsec" hidden>
+  <div class="panel"><button class="btn" id="runeval">Run evaluation</button> <span class="hint">Deterministic offline analyzer; takes about a second.</span></div>
+  <div id="evalout" style="margin-top:14px"></div>
+</section>
+</main>
+<footer>Demo data and evaluation cases are synthetic and hand-written. Offline mode uses a rule-based analyzer, not an LLM. Nothing here is real-world evidence.</footer>
+<script>
+const TYPES=["coreference","temporal","scope","terminology","implicit"];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let samples=[],recs=[];
+
+async function api(path,opts){const r=await fetch(path,opts);const j=await r.json().catch(()=>({error:"Bad response"}));if(!r.ok)throw new Error(j.error||r.statusText);return j}
+
+function renderRecs(){
+  $("#recs").innerHTML=recs.map((r,i)=>`<div class="rec"><div class="row"><div><label for="rn${i}">Name</label><input id="rn${i}" value="${esc(r.id)}" data-i="${i}" data-k="id"></div>
+  <div><label for="rz${i}">Recipient time zone</label><input id="rz${i}" value="${esc((r.meta||{}).recipient_tz||"")}" placeholder="UTC-5" data-i="${i}" data-k="tz"></div></div>
+  <label for="rh${i}" style="margin-top:8px">History</label><textarea id="rh${i}" rows="5" data-i="${i}" data-k="history">${esc((r.history||[]).join("\n"))}</textarea>
+  ${recs.length>1?`<button class="btn ghost" data-del="${i}" style="margin-top:6px">Remove</button>`:""}</div>`).join("");
+}
+$("#recs").addEventListener("input",e=>{const t=e.target,i=t.dataset.i;if(i===undefined)return;const r=recs[i];
+  if(t.dataset.k==="id")r.id=t.value;else if(t.dataset.k==="tz")r.meta={...(r.meta||{}),recipient_tz:t.value.trim()};else r.history=t.value.split("\n").filter(l=>l.trim())});
+$("#recs").addEventListener("click",e=>{const d=e.target.dataset.del;if(d!==undefined){recs.splice(+d,1);renderRecs()}});
+$("#addrec").onclick=()=>{recs.push({id:`Recipient ${recs.length+1}`,history:[],meta:{}});renderRecs()};
+
+function load(i){const s=samples[i];$("#message").value=s.message;$("#ctx").value=JSON.stringify(s.sender_context,null,2);
+  recs=JSON.parse(JSON.stringify(s.recipients));renderRecs();$("#out").innerHTML='<p class="hint">Run the analysis to compare recipients.</p>'}
+
+function annotate(text,spans){let h="",p=0;for(const s of [...spans].sort((a,b)=>a.start-b.start)){h+=esc(text.slice(p,s.start));
+  h+=`<span class="sp t-${s.type}${s.selected?" sel":""}${!s.active?" dim":""}" title="${esc(s.type+": "+s.reason)}">${esc(text.slice(s.start,s.end))}</span>`;p=s.end}return h+esc(text.slice(p))}
+
+function card(r){
+  const d=r.decision,pct=Math.round(d.message_risk*100);
+  const bcls=r.outcome==="pass"?"b-pass":(r.outcome==="adapted"?"b-adapted":"b-bad");
+  const label={pass:"No change needed",adapted:"Adapted",partial:"Adapted, needs sender input",needs_sender_input:"Needs sender input",abstained:"Left unchanged (check failed)"}[r.outcome];
+  const adapted=r.adapted_segments.map(s=>s.edited?`<ins>${esc(s.text)}</ins>`:esc(s.text)).join("");
+  const c=r.constraints,chip=(ok,t)=>`<span class="chip ${ok?"ok":"no"}">${ok?"✓":"✗"} ${t}</span>`;
+  const rows=r.spans.map(s=>`<tr><td><span class="dot d-${s.type}"></span>${esc(s.span)}<div class="why">${esc(s.type)} · ${esc(s.kind)}</div></td>
+    <td class="n">${s.base.toFixed(2)}</td><td class="n">${s.grounding.toFixed(2)}</td><td class="n"><b>${s.risk.toFixed(2)}</b></td>
+    <td>${s.intervention?esc(s.intervention.action==="replace"?"replace":"ask sender"):(s.active?"kept":"ignored")}
+    <div class="why">${esc(s.reason)} ${esc(s.grounding_note)}</div></td></tr>`).join("");
+  const edits=r.spans.filter(s=>s.intervention&&s.intervention.action==="replace").map(s=>`<li><b>${esc(s.span)}</b> → ${esc(s.intervention.replacement)} <span class="why">(${esc(s.intervention.source)})</span></li>`).join("");
+  const p=r.profile;
+  return `<article class="panel res"><div class="head"><h3>${esc(r.recipient)}</h3><span class="badge ${bcls}">${label}</span></div>
+  <div class="why">Message risk ${d.message_risk.toFixed(2)} · decision: <b>${esc(d.action)}</b> (${esc(d.reason)})</div>
+  <div class="meter" title="message risk"><i style="width:${pct}%"></i></div>
+  <div class="lbl">Original</div><div class="msg">${annotate(r.original,r.spans)}</div>
+  <div class="lbl">Adapted</div><div class="msg new">${adapted}</div>
+  ${edits?`<ul style="margin:0 0 6px;padding-left:18px;font-size:13px">${edits}</ul>`:""}
+  ${r.needs_sender_input.map(q=>`<div class="ask">Needs the sender: ${esc(q.question)}</div>`).join("")}
+  ${r.warnings.map(w=>`<div class="ask">${esc(w)}</div>`).join("")}
+  <div class="chips">${chip(c.intent_preserved,"intent preserved")}${chip(c.no_invented_facts,"no invented facts")}${chip(c.minimal_edit,"minimal edit")}
+    <span class="chip">residual risk ${r.goat.residual_risk.toFixed(2)}</span></div>
+  <details><summary>Span analysis (${r.spans.length})</summary><table><tr><th>Span</th><th class="n">Base</th><th class="n">Grounded</th><th class="n">Risk</th><th>Action and why</th></tr>${rows||'<tr><td colspan="5" class="why">No risky spans detected.</td></tr>'}</table></details>
+  <details><summary>Dyadic profile</summary><div class="why" style="margin-top:6px">${p.n_messages} messages (${p.n_recipient_messages} from recipient) ·
+  recipient terms: ${esc(p.recipient_terms.join(", ")||"none")} · defined: ${esc(p.defined_terms.join(", ")||"none")} · recent entities: ${esc(p.recent_entities.join(", ")||"none")} ·
+  time-zone gap: ${p.tz_gap_hours===null?"unknown":p.tz_gap_hours+"h"} · clarification questions: ${esc(TYPES.map(t=>t+" "+p.clarification_counts[t]).join(", "))}</div></details>
+  <details><summary>Constraint details</summary><pre class="why" style="white-space:pre-wrap">${esc(JSON.stringify(c.details,null,1))}</pre></details></article>`}
+
+$("#run").onclick=async()=>{
+  const btn=$("#run");btn.disabled=true;btn.textContent="Analyzing…";
+  try{
+    let ctx={};try{ctx=JSON.parse($("#ctx").value||"{}")}catch(e){throw new Error("Sender context is not valid JSON")}
+    const body={message:$("#message").value,sender_context:ctx,use_llm:$("#usellm").checked,
+      recipients:recs.map(r=>({id:r.id,history:r.history,meta:r.meta}))};
+    const j=await api("/api/compare",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    $("#out").innerHTML=`<div class="grid">${j.results.map(card).join("")}</div>`;
+  }catch(e){$("#out").innerHTML=`<p class="err">${esc(e.message)}</p>`}
+  btn.disabled=false;btn.textContent="Analyze message"};
+
+function pct(x){return (x*100).toFixed(1)+"%"}
+function evalBlock(name,s){
+  const m=s.span_type_level.micro,d=s.decision_level.confusion,k=s.constraint_checks;
+  const per=Object.entries(s.span_type_level.per_type).map(([t,c])=>`<tr><td><span class="dot d-${t}"></span>${t}</td><td class="n">${c.precision.toFixed(3)}</td><td class="n">${c.recall.toFixed(3)}</td><td class="n">${c.f1.toFixed(3)}</td><td class="n">${c.tp}/${c.fp}/${c.fn}/${c.tn}</td></tr>`).join("");
+  return `<div class="panel"><h3 style="margin:0 0 6px">${name==="all"?"All cases":name==="dev"?"Dev split (used while building)":"Holdout split (never tuned on)"} · ${s.n_cases} cases</h3>
+  <div class="kpis"><div class="kpi"><b>${m.precision.toFixed(3)}</b>precision</div><div class="kpi"><b>${m.recall.toFixed(3)}</b>recall</div><div class="kpi"><b>${m.f1.toFixed(3)}</b>F1 (type-level, micro)</div></div>
+  <table><tr><th>Risk type</th><th class="n">P</th><th class="n">R</th><th class="n">F1</th><th class="n">TP/FP/FN/TN</th></tr>${per}</table>
+  <p class="lbl" style="margin-top:14px">Decision-level confusion matrix (does this recipient need an intervention?)</p>
+  <table class="cm" style="width:auto"><tr><th></th><th>predicted pass</th><th>predicted intervene</th></tr><tr><th>gold pass</th><td class="k">${d.tn}</td><td class="k">${d.fp}</td></tr><tr><th>gold intervene</th><td class="k">${d.fn}</td><td class="k">${d.tp}</td></tr></table>
+  <p class="hint">P ${d.precision.toFixed(3)} · R ${d.recall.toFixed(3)} · F1 ${d.f1.toFixed(3)}</p>
+  <p class="lbl">Constraint preservation on ${k.n_adapted_outputs} adapted outputs</p>
+  <div class="chips"><span class="chip ok">intent ${k.intent_preserved_pass}/${k.n_adapted_outputs}</span><span class="chip ok">no invented facts ${k.no_invented_facts_pass}/${k.n_adapted_outputs}</span><span class="chip ok">minimal edit ${k.minimal_edit_pass}/${k.n_adapted_outputs}</span>
+  <span class="chip ok">pass-through unchanged ${k.pass_through_unchanged}/${k.n_pass_decisions}</span><span class="chip ok">no unselected text edited ${k.independent_no_unselected_edits}/${k.n_with_independent_check}</span></div>
+  ${s.errors.length?`<p class="lbl">Misclassified cases</p><table><tr><th>Case</th><th>Gold</th><th>Predicted</th></tr>${s.errors.map(e=>`<tr><td>${esc(e.id)}</td><td>${esc(e.gold.join(", ")||"none")}</td><td>${esc(e.pred.join(", ")||"none")}</td></tr>`).join("")}</table>`:'<p class="hint">No misclassified cases.</p>'}</div>`}
+$("#runeval").onclick=async()=>{const b=$("#runeval");b.disabled=true;
+  try{const j=await api("/api/evaluate");
+    const st=Object.entries(j.checker_self_test).map(([k,v])=>`<tr><td>${esc(k.replace(/_/g," "))}</td><td class="n">${v.detected}/${v.injected}</td></tr>`).join("");
+    $("#evalout").innerHTML=`<div class="note"><b>Read this first.</b> ${esc(j.disclaimer)} The pipeline's rules were developed on the dev split; the holdout split was written afterwards. Both are small and written by the same author, so treat the numbers as a check that the system behaves as designed, not as a performance claim.</div>
+    ${["holdout","dev","all"].filter(n=>j.splits[n]).map(n=>evalBlock(n,j.splits[n])).join("")}
+    <div class="panel"><h3 style="margin:0 0 6px">Constraint checker self-test</h3><p class="hint">Deliberately broken edits injected into real outputs; the checker should reject every one.</p><table style="width:auto"><tr><th>Injected violation</th><th class="n">Detected</th></tr>${st}</table></div>`;
+  }catch(e){$("#evalout").innerHTML=`<p class="err">${esc(e.message)}</p>`}b.disabled=false};
+
+function tab(which){for(const t of ["demo","eval"]){$("#tab-"+t).setAttribute("aria-selected",t===which);}$("#demo").hidden=which!=="demo";$("#evalsec").hidden=which!=="eval"}
+$("#tab-demo").onclick=()=>tab("demo");$("#tab-eval").onclick=()=>tab("eval");
+
+(async()=>{
+  try{const [s,h]=await Promise.all([api("/api/samples"),api("/api/health")]);samples=s.scenarios;
+    $("#scenario").innerHTML=samples.map((x,i)=>`<option value="${i}">${esc(x.title)}</option>`).join("");
+    $("#scenario").onchange=e=>load(+e.target.value);load(0);
+    $("#provider").textContent=h.provider==="offline"?"Analyzer: offline rules (deterministic). Set LLM_PROVIDER in .env to add an LLM.":`LLM provider: ${h.provider} (${h.model}). Scoring and decisions stay rule-based.`;
+    $("#usellm").checked=h.provider!=="offline";$("#usellm").disabled=h.provider==="offline";
+  }catch(e){$("#out").innerHTML=`<p class="err">${esc(e.message)}</p>`}
+})();
+</script>
+</body>
+</html>

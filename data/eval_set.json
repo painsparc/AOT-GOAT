@@ -1,0 +1,969 @@
+{
+ "disclaimer": "Synthetic, hand-written controlled cases (dev = used while building the rules; holdout = written afterwards, never used for tuning). Not real-world evidence.",
+ "cases": [
+  {
+   "id": "c1-pos-cold",
+   "split": "dev",
+   "message": "Can you review it before you leave?",
+   "history": [
+    "S: Hi, how was your weekend?",
+    "R: Good thanks, quiet one."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "referents": {
+     "it": "the vendor contract"
+    }
+   },
+   "meta": {},
+   "gold": [
+    "coreference"
+   ]
+  },
+  {
+   "id": "c2-neg-warm",
+   "split": "dev",
+   "message": "Can you review it before you leave?",
+   "history": [
+    "S: The vendor contract is attached.",
+    "R: Thanks, I'll read the vendor contract tonight."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "referents": {
+     "it": "the vendor contract"
+    }
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "c3-pos-two-pronouns",
+   "split": "dev",
+   "message": "Tell her it is ready.",
+   "history": [
+    "S: Did you see the match?",
+    "R: Not yet."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "referents": {
+     "her": "Dr. Rao",
+     "it": "the lab report"
+    }
+   },
+   "meta": {},
+   "gold": [
+    "coreference"
+   ]
+  },
+  {
+   "id": "c4-neg-in-message",
+   "split": "dev",
+   "message": "I spoke to Priya and she agreed.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "c5-pos-two-candidates",
+   "split": "dev",
+   "message": "Please forward that to finance.",
+   "history": [
+    "S: I attached the invoice and the purchase order.",
+    "R: Received both the invoice and the purchase order."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "referents": {
+     "that": "the purchase order"
+    }
+   },
+   "meta": {},
+   "gold": [
+    "coreference"
+   ]
+  },
+  {
+   "id": "c6-neg-complementizer",
+   "split": "dev",
+   "message": "I think that we should wait.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "c7-neg-expletive",
+   "split": "dev",
+   "message": "It is important to confirm the numbers.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "c8-neg-reply-that",
+   "split": "dev",
+   "message": "Thanks, that works for me.",
+   "history": [
+    "S: Can we move the call to 4 pm?"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "t1-pos-tz-gap",
+   "split": "dev",
+   "message": "Please send the numbers by tomorrow.",
+   "history": [
+    "S: Morning!",
+    "R: Morning, working from Toronto this week."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC-5"
+   },
+   "gold": [
+    "temporal"
+   ]
+  },
+  {
+   "id": "t2-neg-shared-usage",
+   "split": "dev",
+   "message": "Please send the numbers by tomorrow.",
+   "history": [
+    "S: Please send the draft by tomorrow.",
+    "R: Sure, will send by tomorrow."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC+5:30"
+   },
+   "gold": []
+  },
+  {
+   "id": "t3-pos-vague",
+   "split": "dev",
+   "message": "Share your feedback soon.",
+   "history": [
+    "S: Hi!",
+    "R: Hello!"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "temporal"
+   ]
+  },
+  {
+   "id": "t4-pos-vague-used-before",
+   "split": "dev",
+   "message": "Let me know soon.",
+   "history": [
+    "S: Any update?",
+    "R: I'll let you know soon."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "temporal"
+   ]
+  },
+  {
+   "id": "t5-pos-eod-tz-gap",
+   "split": "dev",
+   "message": "Submit the form by EOD Friday.",
+   "history": [
+    "S: Hello",
+    "R: Hi"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "PST"
+   },
+   "gold": [
+    "temporal"
+   ]
+  },
+  {
+   "id": "t6-neg-explicit-date",
+   "split": "dev",
+   "message": "Submit the form by Friday 9 Oct.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "t7-pos-next-week",
+   "split": "dev",
+   "message": "Let's meet next week.",
+   "history": [
+    "S: Hi",
+    "R: Hi"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "temporal"
+   ]
+  },
+  {
+   "id": "t8-neg-next-week-used",
+   "split": "dev",
+   "message": "Let's meet next week.",
+   "history": [
+    "S: Let's plan to meet next week.",
+    "R: Next week works for me."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC+5:30"
+   },
+   "gold": []
+  },
+  {
+   "id": "s1-pos-everyone",
+   "split": "dev",
+   "message": "Email everyone the summary.",
+   "history": [
+    "S: Hi",
+    "R: Hi"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "scope"
+   ]
+  },
+  {
+   "id": "s2-neg-everyone-defined",
+   "split": "dev",
+   "message": "Email everyone the summary.",
+   "history": [
+    "S: I'll email the summary to Asha, Ravi and Karan, so everyone on the team.",
+    "R: Perfect, everyone knows."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "s3-pos-only",
+   "split": "dev",
+   "message": "Only senior staff should attend.",
+   "history": [
+    "S: Hi",
+    "R: Hi"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "scope"
+   ]
+  },
+  {
+   "id": "s4-pos-all-of-them",
+   "split": "dev",
+   "message": "Please fix all of them.",
+   "history": [
+    "S: Morning.",
+    "R: Morning."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "referents": {
+     "them": "the failing tests"
+    }
+   },
+   "meta": {},
+   "gold": [
+    "coreference",
+    "scope"
+   ]
+  },
+  {
+   "id": "s5-neg-idiom",
+   "split": "dev",
+   "message": "Everything is all set.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "s6-neg-explicit-list",
+   "split": "dev",
+   "message": "Please send the summary to Asha, Ravi and Karan.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "m1-pos-acronym",
+   "split": "dev",
+   "message": "The SLA needs a review.",
+   "history": [
+    "S: Hi",
+    "R: Hi"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "glossary": {
+     "SLA": "service-level agreement"
+    }
+   },
+   "meta": {},
+   "gold": [
+    "terminology"
+   ]
+  },
+  {
+   "id": "m2-neg-recipient-used",
+   "split": "dev",
+   "message": "The SLA needs a review.",
+   "history": [
+    "R: Our SLA with the vendor is 99.9%."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "m3-pos-jargon",
+   "split": "dev",
+   "message": "We should roll back the hotfix.",
+   "history": [
+    "S: Morning",
+    "R: Hi"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "terminology"
+   ]
+  },
+  {
+   "id": "m4-neg-defined-in-message",
+   "split": "dev",
+   "message": "The SLA (service-level agreement) needs a review.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "m5-pos-kyc",
+   "split": "dev",
+   "message": "Check the KYC status.",
+   "history": [
+    "S: Hi",
+    "R: Hi"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "terminology"
+   ]
+  },
+  {
+   "id": "m6-neg-jargon-known",
+   "split": "dev",
+   "message": "We should deploy the hotfix.",
+   "history": [
+    "S: A bug was reported.",
+    "R: I'll test the hotfix first."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "i1-pos-as-discussed",
+   "split": "dev",
+   "message": "Apply the discount as discussed.",
+   "history": [
+    "S: Hi",
+    "R: Hello"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "implicit"
+   ]
+  },
+  {
+   "id": "i2-neg-as-discussed-grounded",
+   "split": "dev",
+   "message": "Apply the discount as discussed.",
+   "history": [
+    "S: Let's agree on the discount: 10% for annual plans.",
+    "R: Agreed, we decided that on the call."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "i3-pos-the-client",
+   "split": "dev",
+   "message": "Please update the client.",
+   "history": [
+    "S: Hi",
+    "R: Hello"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "implicit"
+   ]
+  },
+  {
+   "id": "i4-neg-the-client-known",
+   "split": "dev",
+   "message": "Please update the client.",
+   "history": [
+    "S: The client called about pricing.",
+    "R: Noted, I'll handle the client."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "i5-pos-same-as-last-time",
+   "split": "dev",
+   "message": "Same as last time please.",
+   "history": [
+    "S: Hi",
+    "R: Hello"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "implicit"
+   ]
+  },
+  {
+   "id": "i6-neg-clean",
+   "split": "dev",
+   "message": "Thanks for the quick turnaround.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "i7-pos-where-is-the-report",
+   "split": "dev",
+   "message": "Where is the report?",
+   "history": [
+    "S: Hi",
+    "R: Hello"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "implicit"
+   ]
+  },
+  {
+   "id": "x1-all-five-cold",
+   "split": "dev",
+   "message": "Please send it to everyone by EOD tomorrow, as discussed. The SLA needs sign-off before the meeting.",
+   "history": [
+    "S: Hi",
+    "R: Hello"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "meta": {
+     "sender_tz": "UTC+5:30"
+    },
+    "referents": {
+     "it": "the Q3 budget report"
+    },
+    "glossary": {
+     "SLA": "service-level agreement"
+    },
+    "context_notes": {
+     "everyone": "everyone on the backend team (Asha, Ravi and Karan)",
+     "as discussed": "as discussed on Mon 28 Sep (revised payment terms)",
+     "the meeting": "the Friday budget review meeting"
+    }
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC-5"
+   },
+   "gold": [
+    "coreference",
+    "scope",
+    "temporal",
+    "terminology",
+    "implicit"
+   ]
+  },
+  {
+   "id": "x2-all-grounded-asha",
+   "split": "dev",
+   "message": "Please send it to everyone by EOD tomorrow, as discussed. The SLA needs sign-off before the meeting.",
+   "history": [
+    "S: Draft of the Q3 budget report is ready for review.",
+    "R: Great, I'll read the Q3 budget report tonight. SLA section still pending?",
+    "S: Yes, the SLA wording is with legal. EOD tomorrow works for the sign-off?",
+    "R: EOD tomorrow works. Should we share the Q3 budget report with the whole backend team?",
+    "S: Yes, everyone: Asha, Ravi and Karan. As discussed on Monday, the budget review meeting is Friday.",
+    "R: Perfect, will do. See you at the budget review meeting."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "meta": {
+     "sender_tz": "UTC+5:30"
+    },
+    "referents": {
+     "it": "the Q3 budget report"
+    },
+    "glossary": {
+     "SLA": "service-level agreement"
+    },
+    "context_notes": {
+     "everyone": "everyone on the backend team (Asha, Ravi and Karan)",
+     "as discussed": "as discussed on Mon 28 Sep (revised payment terms)",
+     "the meeting": "the Friday budget review meeting"
+    }
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC+5:30"
+   },
+   "gold": []
+  },
+  {
+   "id": "x3-partial-meera",
+   "split": "dev",
+   "message": "Please send it to everyone by EOD tomorrow, as discussed. The SLA needs sign-off before the meeting.",
+   "history": [
+    "S: Hi Meera, the Q3 budget report is ready.",
+    "R: Thanks! I'll go through the Q3 budget report tomorrow.",
+    "S: Please share feedback by EOD tomorrow if possible.",
+    "R: Sure, EOD tomorrow is fine.",
+    "S: Also, we agreed on Monday to review it with the whole backend team on Friday, the budget review meeting.",
+    "R: Okay, noted."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "meta": {
+     "sender_tz": "UTC+5:30"
+    },
+    "referents": {
+     "it": "the Q3 budget report"
+    },
+    "glossary": {
+     "SLA": "service-level agreement"
+    },
+    "context_notes": {
+     "everyone": "everyone on the backend team (Asha, Ravi and Karan)",
+     "as discussed": "as discussed on Mon 28 Sep (revised payment terms)",
+     "the meeting": "the Friday budget review meeting"
+    }
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC+5:30"
+   },
+   "gold": [
+    "scope",
+    "terminology"
+   ]
+  },
+  {
+   "id": "x4-neg-release-notes",
+   "split": "dev",
+   "message": "Great work on the release notes.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "x5-neg-absolute",
+   "split": "dev",
+   "message": "Please review the attached draft by 9 Oct 2026.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "x6-neg-clock-time",
+   "split": "dev",
+   "message": "Lunch at 1 pm in the cafeteria.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "h1-pos-them",
+   "split": "holdout",
+   "message": "Could you send them over?",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "referents": {
+     "them": "the signed forms"
+    }
+   },
+   "meta": {},
+   "gold": [
+    "coreference"
+   ]
+  },
+  {
+   "id": "h2-neg-them-grounded",
+   "split": "holdout",
+   "message": "Could you send them over?",
+   "history": [
+    "S: The signed forms are scanned.",
+    "R: Great, I'll check the signed forms."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "referents": {
+     "them": "the signed forms"
+    }
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "h3-pos-weekday-tz-gap",
+   "split": "holdout",
+   "message": "The audit starts Monday.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC-5"
+   },
+   "gold": [
+    "temporal"
+   ]
+  },
+  {
+   "id": "h4-neg-explicit-date-time",
+   "split": "holdout",
+   "message": "Call me on 7 Oct at 3 pm.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "h5-pos-vague-couple-days",
+   "split": "holdout",
+   "message": "I will be back in a couple of days.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "temporal"
+   ]
+  },
+  {
+   "id": "h6-pos-the-team",
+   "split": "holdout",
+   "message": "Share the update with the team.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "scope"
+   ]
+  },
+  {
+   "id": "h7-pos-except",
+   "split": "holdout",
+   "message": "Invite the engineers except Sam.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "scope"
+   ]
+  },
+  {
+   "id": "h8-pos-latency-p99",
+   "split": "holdout",
+   "message": "Please confirm the p99 latency.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "terminology"
+   ]
+  },
+  {
+   "id": "h9-neg-latency-known",
+   "split": "holdout",
+   "message": "Please confirm the latency.",
+   "history": [
+    "R: Latency is within limits."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "h10-pos-asap",
+   "split": "holdout",
+   "message": "Reply ASAP.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "temporal"
+   ]
+  },
+  {
+   "id": "h11-pos-the-issue",
+   "split": "holdout",
+   "message": "Please follow up on the issue.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "implicit"
+   ]
+  },
+  {
+   "id": "h12-neg-the-issue-known",
+   "split": "holdout",
+   "message": "Please follow up on the issue.",
+   "history": [
+    "S: There's an issue with login.",
+    "R: Yes, the login issue is on my list."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "h13-pos-implicit-no-marker",
+   "split": "holdout",
+   "message": "Let's go with what we did for Mumbai.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "implicit"
+   ]
+  },
+  {
+   "id": "h14-pos-three-pronouns",
+   "split": "holdout",
+   "message": "He said he'd call them back.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": [
+    "coreference"
+   ]
+  },
+  {
+   "id": "h15-neg-clean",
+   "split": "holdout",
+   "message": "Please call me at 3 pm.",
+   "history": [],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {},
+   "gold": []
+  },
+  {
+   "id": "h16-pos-all-next-friday",
+   "split": "holdout",
+   "message": "Update the dashboard for all clients by next Friday.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC+5:30"
+   },
+   "gold": [
+    "scope",
+    "temporal"
+   ]
+  },
+  {
+   "id": "h17-neg-all-next-friday-grounded",
+   "split": "holdout",
+   "message": "Update the dashboard for all clients by next Friday.",
+   "history": [
+    "S: Update the dashboard for all clients: Acme, Zenith and Orbit by next Friday.",
+    "R: Will do, next Friday works."
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05"
+   },
+   "meta": {
+    "sender_tz": "UTC+5:30",
+    "recipient_tz": "UTC+5:30"
+   },
+   "gold": []
+  },
+  {
+   "id": "h18-pos-negation-preserved",
+   "split": "holdout",
+   "message": "Do not ship it until the review is done.",
+   "history": [
+    "S: Morning",
+    "R: Hi there"
+   ],
+   "sender_context": {
+    "reference_date": "2026-10-05",
+    "referents": {
+     "it": "the v2 build"
+    }
+   },
+   "meta": {},
+   "gold": [
+    "coreference",
+    "implicit"
+   ]
+  }
+ ]
+}
